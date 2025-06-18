@@ -10,6 +10,8 @@ class LoadStreamlitUI:
     def load_streamlit_ui(self):
         st.set_page_config(page_title="🤖 " + self.config.get_page_title(),layout="wide")
         st.header("🤖 " + self.config.get_page_title(), divider="rainbow")
+        st.session_state.time_frame =''
+        st.session_state.IsFetchButtonClicked = False
 
         with st.sidebar:
             st.title("🛠️ Configuration")
@@ -26,10 +28,19 @@ class LoadStreamlitUI:
                     st.warning("Please enter your Groq API Key. Don't have refer: https://console.groq.com/keys")
                     st.stop()
 
-            if self.user_controls['selected_usercase'] == "Chatbot with Tool":
+            if self.user_controls['selected_usercase'] == "Chatbot with Tool" or self.user_controls['selected_usercase'] == "AI News":
                 os.environ['TAVILY_API_KEY'] = self.user_controls["TAVILY_API_KEY"] = st.session_state['TAVILY_API_KEY'] = st.text_input("Enter Tavily API Key", type="password")
                 if not self.user_controls['TAVILY_API_KEY']:
                     st.warning("Please enter your Tavily API Key. Don't have refer: https://app.tavily.com/home")
                     st.stop()
+            
+            if self.user_controls['selected_usercase'] == "AI News":
+                st.subheader("📃 Select Time Frame")
+                with st.sidebar:
+                    time_frame = st.selectbox("Select Time Frame", ["Daily", "Weekly", "Monthly"],index=0)
+                if st.button("🔎 Fetch Latest AI News",use_container_width=True):
+                    st.session_state.IsFetchButtonClicked = True
+                    st.session_state.time_frame = time_frame
+
         return self.user_controls
 

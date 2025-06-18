@@ -19,8 +19,10 @@ def load_langgraph_agenticai_app():
     if "memory" not in st.session_state:
         st.session_state.memory = MemorySaver()
 
-    # User sends input
-    user_message = st.chat_input("Enter your message here") 
+    if st.session_state.IsFetchButtonClicked:
+        user_message = st.session_state.time_frame
+    else:        
+        user_message = st.chat_input("Enter your message here") 
     if user_message:
         try:
             # Initialize LLM based on selected config
